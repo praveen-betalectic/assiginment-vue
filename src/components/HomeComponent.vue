@@ -84,6 +84,7 @@
 </template>
 
 <script>
+  import Swal from "sweetalert2";
   export default {
     data() {
       return {
@@ -101,12 +102,26 @@
         this.$router.push("add-fav-package");
       },
       deletePackage(index) {
-        console.log(index);
-        if (index > -1) {
-          this.favPackages.splice(index, 1);
-        }
-        localStorage.setItem("favPackages", JSON.stringify(this.favPackages));
-        console.log(this.favPackages);
+        Swal.fire({
+          title: "Are you sure?",
+          text: "You won't be able to revert this!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, delete it!",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            if (index > -1) {
+              this.favPackages.splice(index, 1);
+            }
+            localStorage.setItem(
+              "favPackages",
+              JSON.stringify(this.favPackages)
+            );
+            Swal.fire("Deleted!", "Your file has been deleted.", "success");
+          }
+        });
       },
     },
   };
